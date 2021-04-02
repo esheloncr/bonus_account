@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Account
+from .models import Account, Transactions
 # Register your models here.
 
 
@@ -17,3 +17,17 @@ class AdminBankAccount(admin.ModelAdmin):
         "second_name",
         "phone_number",
     )
+
+
+@admin.register(Transactions)
+class AdminTransactions(admin.ModelAdmin):
+    list_display = (
+        "transaction_type",
+        "transaction_sum",
+        "transaction_date",
+    )
+    list_filter = (
+        "transaction_type",
+        "transaction_date"
+    )
+    list_display_links = None
