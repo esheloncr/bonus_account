@@ -29,7 +29,7 @@ class Transactions(models.Model):
     transaction_type = models.CharField(max_length=25, verbose_name="Тип транзакции", choices=types, default="Оплата бонусами", null=False)
     transaction_sum = models.IntegerField(verbose_name="Сумма транзакции")
     transaction_date = models.DateField(verbose_name="Дата транзакции")
-    transaction_user = models.ForeignKey("Account", verbose_name="Исполнитель транзакции", null=True, on_delete=models.CASCADE, related_name="transaction")
+    transaction_user = models.ForeignKey("Account", verbose_name="Исполнитель транзакции", null=True, on_delete=models.CASCADE, related_name="transaction", blank=True, default=None)
 
     class Meta:
         verbose_name = "Транзакции"

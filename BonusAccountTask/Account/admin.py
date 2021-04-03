@@ -1,5 +1,6 @@
 from django.contrib import admin
 from .models import Account, Transactions
+from .forms import AccountCreationForm,AccountEditForm
 # Register your models here.
 
 
@@ -17,6 +18,13 @@ class AdminBankAccount(admin.ModelAdmin):
         "second_name",
         "phone_number",
     )
+
+    def get_form(self, request, obj=None, **kwargs):
+        if obj:
+            self.form = AccountEditForm
+        else:
+            self.form = AccountCreationForm
+        return super(AdminBankAccount, self).get_form(request, obj, **kwargs)
 
 
 @admin.register(Transactions)
