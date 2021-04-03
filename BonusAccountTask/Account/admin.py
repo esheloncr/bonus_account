@@ -25,6 +25,7 @@ class AdminTransactions(admin.ModelAdmin):
         "transaction_type",
         "transaction_sum",
         "transaction_date",
+        "transaction_user",
     )
     list_filter = (
         "transaction_type",
