@@ -30,13 +30,13 @@ class AdminBankAccount(admin.ModelAdmin):
 @admin.register(Transactions)
 class AdminTransactions(admin.ModelAdmin):
     list_display = (
-        "transaction_type",
-        "transaction_sum",
-        "transaction_date",
-        "transaction_user",
+        "type",
+        "sum",
+        "date",
+        "user",
     )
     list_filter = (
-        "transaction_type",
-        "transaction_date"
+        "type",
+        "date"
     )
     list_display_links = None

@@ -9,7 +9,7 @@ class TransactionsSerializer(serializers.ModelSerializer):
 
 
 class AccountSerializer(serializers.ModelSerializer):
-    transaction = TransactionsSerializer(many=True, read_only=True)
+    transactions = TransactionsSerializer(many=True, read_only=True)
 
     class Meta:
         model = Account

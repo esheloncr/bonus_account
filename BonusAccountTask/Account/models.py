@@ -21,19 +21,25 @@ class Account(models.Model):
 
 
 class Transactions(models.Model):
-    types = (
-        ("BonusTransaction","Оплата бонусами"),
-        ("MoneyTransaction","Оплата деньгами"),
-        ("EarnBonuses","Начисление бонусов")
+
+    BONUS_TRANSACTION = 'BonusTransaction'
+    MONEY_TRANSACTION = 'MoneyTransaction'
+    EARN_BONUSES = 'EarnBonuses'
+
+    TYPES = (
+        (BONUS_TRANSACTION, "Оплата бонусами"),
+        (MONEY_TRANSACTION, "Оплата деньгами"),
+        (EARN_BONUSES, "Начисление бонусов")
     )
-    transaction_type = models.CharField(max_length=25, verbose_name="Тип транзакции", choices=types, default="Оплата бонусами", null=False)
-    transaction_sum = models.IntegerField(verbose_name="Сумма транзакции")
-    transaction_date = models.DateField(verbose_name="Дата транзакции")
-    transaction_user = models.ForeignKey("Account", verbose_name="Исполнитель транзакции", null=True, on_delete=models.CASCADE, related_name="transaction", blank=True, default=None)
+
+    type = models.CharField(max_length=25, verbose_name="Тип транзакции", choices=TYPES, default="Оплата бонусами", null=False)
+    sum = models.IntegerField(verbose_name="Сумма транзакции")
+    date = models.DateField(verbose_name="Дата транзакции")
+    user = models.ForeignKey("Account", verbose_name="Исполнитель транзакции", null=True, on_delete=models.CASCADE, related_name="transactions", blank=True, default=None)
 
     class Meta:
         verbose_name = "Транзакции"
         verbose_name_plural = "Транзакции"
 
     def __str__(self):
-        return self.transaction_type
+        return self.type
