@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'Account',
     "rest_framework",
     "django_filters",
+    "rest_framework.authtoken"
 ]
 
 MIDDLEWARE = [
@@ -71,6 +72,14 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'BonusAccountTask.wsgi.application'
+
+REST_FRAMEWORK = {
+    'DEFAULT_SCHEMA_CLASS': 'rest_framework.schemas.coreapi.AutoSchema',
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.TokenAuthentication',
+    ),
+}
+
 
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
