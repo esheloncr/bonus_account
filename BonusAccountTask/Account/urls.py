@@ -1,8 +1,12 @@
 from django.urls import path
-from .views import AccountView
+from rest_framework import routers
 
-app_name = "Accounts"
+from .views import AccountViewSet, TransactionViewSet
 
-urlpatterns = [
-    path("Accounts", AccountView.as_view()),
-]
+app_name = "Account"
+
+router = routers.SimpleRouter()
+router.register(r'transactions', TransactionViewSet)
+router.register(r'accounts', AccountViewSet)
+
+urlpatterns = [] + router.urls

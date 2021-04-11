@@ -32,10 +32,20 @@ class Transactions(models.Model):
         (EARN_BONUSES, "Начисление бонусов")
     )
 
-    type = models.CharField(max_length=25, verbose_name="Тип транзакции", choices=TYPES, default="Оплата бонусами", null=False)
+    STATUS_SUCCESSFUL = "SuccessTransaction"
+    STATUS_UNSUCCESSFUL = "UnsuccessfulTransaction"
+
+    STATUSES = (
+        (STATUS_SUCCESSFUL, "Успешная транзакция"),
+        (STATUS_UNSUCCESSFUL, "Неудачная транзакция")
+    )
+
+    type = models.CharField(max_length=25, verbose_name="Тип транзакции", choices=TYPES, default=BONUS_TRANSACTION, null=False)
     sum = models.IntegerField(verbose_name="Сумма транзакции")
     date = models.DateField(verbose_name="Дата транзакции")
-    user = models.ForeignKey("Account", verbose_name="Исполнитель транзакции", null=True, on_delete=models.CASCADE, related_name="transactions", blank=True, default=None)
+    transaction_executor = models.ForeignKey("Account", verbose_name="Исполнитель транзакции", null=True, on_delete=models.CASCADE, related_name="transaction_executed", blank=True)
+    transaction_receiver = models.ForeignKey("Account", verbose_name="Получатель транзакции", null=True, on_delete=models.CASCADE, related_name="transaction_received", blank=True)
+    transaction_status = models.CharField(max_length=25, verbose_name="Статус транзакции", choices=STATUSES, default=STATUS_UNSUCCESSFUL, null=False)
 
     class Meta:
         verbose_name = "Транзакции"

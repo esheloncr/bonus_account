@@ -1,5 +1,5 @@
 from django.forms import ModelForm
-from .models import Account
+from .models import Account, Transactions
 
 
 class AccountCreationForm(ModelForm):
@@ -15,4 +15,16 @@ class AccountEditForm(ModelForm):
             "first_name",
             "second_name",
             "phone_number",
+        )
+
+
+class TransactionCreationForm(ModelForm):
+    class Meta:
+        model = Transactions
+        fields = (
+            "type",
+            "sum",
+            "date",
+            "transaction_executor",
+            "transaction_receiver",
         )

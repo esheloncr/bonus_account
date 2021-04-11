@@ -9,7 +9,15 @@ class TransactionsSerializer(serializers.ModelSerializer):
 
 
 class AccountSerializer(serializers.ModelSerializer):
-    transactions = TransactionsSerializer(many=True, read_only=True)
+    class Meta:
+        model = Account
+        fields = "__all__"
+
+
+class TransactionsToAccountSerializer(serializers.ModelSerializer):
+
+    transaction_received = TransactionsSerializer(many=True, read_only=True)
+    transaction_executed = TransactionsSerializer(many=True, read_only=True)
 
     class Meta:
         model = Account

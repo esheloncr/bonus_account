@@ -1,33 +1,24 @@
-from rest_framework import status
-from rest_framework.response import Response
-from rest_framework.mixins import CreateModelMixin
-from rest_framework.views import APIView
-from .models import Account
-from .serializers import AccountSerializer
-# Create your views here.
+from rest_framework.mixins import ListModelMixin
+from rest_framework.viewsets import GenericViewSet
+from django_filters.rest_framework import DjangoFilterBackend
+from .models import Account, Transactions
+from .serializers import AccountSerializer, TransactionsSerializer, TransactionsToAccountSerializer
 
 
-class AccountView(APIView, CreateModelMixin):
-    serializer_class = AccountSerializer
+class AccountViewSet(ListModelMixin, GenericViewSet):
+    queryset = Account.objects.all()
+    filter_backends = [DjangoFilterBackend]
+    filter_fields = [
+        "card_number",
+    ]
 
-    def get(self, request):
-        accounts = Account.objects.all()
-        card_number = request.GET.get("card_number",None)
-        if card_number:
-            accounts = Account.objects.all().filter(card_number__contains=card_number)
-            serializer = AccountSerializer(accounts, many=True)
-            return Response({"Account":serializer.data})
-        else:
-            serializer = AccountSerializer(accounts,many=True)
-            return Response({"Accounts": serializer.data})
+    def get_serializer_class(self):
+        if "card_number" in self.request.query_params:
+            return TransactionsToAccountSerializer
+        return AccountSerializer
 
-    def create(self, request, *args, **kwargs):
-        serializer = self.serializer_class(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        self.perform_create(serializer)
-        headers = self.get_success_headers(serializer.data)
-        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
-    def post(self, request):
-        return self.create(request)
+class TransactionViewSet(ListModelMixin, GenericViewSet):
+    serializer_class = TransactionsSerializer
+    queryset = Transactions.objects.all()
 
