@@ -2,7 +2,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.mixins import ListModelMixin, CreateModelMixin
 from rest_framework.viewsets import GenericViewSet
 from django_filters.rest_framework import DjangoFilterBackend
-from .models import Account, Transactions
+from Account.models import Account, Transactions
 from .serializers import AccountSerializer, TransactionsSerializer
 
 
