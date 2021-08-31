@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Account, Transactions
+from Account.models import Account, Transactions
 
 
 class TransactionsSerializer(serializers.ModelSerializer):
