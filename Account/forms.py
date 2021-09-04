@@ -6,6 +6,7 @@ class AccountCreationForm(ModelForm):
     class Meta:
         model = Account
         fields = "__all__"
+        exclude = ["is_active"]
 
 
 class AccountEditForm(ModelForm):

@@ -1,4 +1,7 @@
 from django.contrib import admin
+from django.urls import path
+from django.shortcuts import redirect
+from django.utils.html import format_html
 from .models import Account, Transactions
 from .forms import AccountCreationForm, AccountEditForm, TransactionCreationForm
 
@@ -11,6 +14,7 @@ class AdminBankAccount(admin.ModelAdmin):
         "phone_number",
         "card_number",
         "card_balance",
+        "account_actions",
     )
     search_fields = (
         "card_number",
@@ -24,6 +28,32 @@ class AdminBankAccount(admin.ModelAdmin):
         else:
             self.form = AccountCreationForm
         return super(AdminBankAccount, self).get_form(request, obj, **kwargs)
+
+    def get_urls(self):
+        urls = super().get_urls()
+        custom_urls = [
+            path("accept/<int:pk>", self.accept_user),
+            path("decline/<int:pk>", self.decline_user),
+        ]
+        return custom_urls + urls
+
+    def account_actions(self, obj):
+        if obj.is_active:
+            return format_html(
+                f"<a href='{obj.pk}/delete' class='button'>Remove account</a>"
+            )
+        return format_html(
+            f"<a href='accept/{obj.pk}' class='button'>Accept</a>"
+            f"<a href='decline/{obj.pk}' class='button'>Decline</a>"
+        )
+
+    def accept_user(self, request, pk):
+        self.model.objects.filter(pk=pk).update(is_active=True)
+        return redirect("../")
+
+    def decline_user(self, request, pk):
+        self.model.objects.filter(pk=pk).update(is_active=False)
+        return redirect(f"../{pk}/delete")
 
 
 @admin.register(Transactions)

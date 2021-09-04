@@ -1,5 +1,4 @@
 from django.db import models
-# Create your models here.
 
 
 class Account(models.Model):
@@ -8,6 +7,7 @@ class Account(models.Model):
     phone_number = models.CharField(max_length=12, verbose_name="Номер телефона")
     card_number = models.CharField(unique=True, verbose_name="Номер карты", max_length=20)
     card_balance = models.IntegerField(verbose_name="Баланс карты")
+    is_active = models.BooleanField(default=False)
 
     class Meta:
         verbose_name = "Клиент"
@@ -43,9 +43,12 @@ class Transactions(models.Model):
     type = models.CharField(max_length=25, verbose_name="Тип транзакции", choices=TYPES, default=BONUS_TRANSACTION, null=False)
     sum = models.IntegerField(verbose_name="Сумма транзакции")
     date = models.DateField(verbose_name="Дата транзакции")
-    transaction_executor = models.ForeignKey("Account", verbose_name="Исполнитель транзакции", null=True, on_delete=models.CASCADE, related_name="transaction_executed", blank=True)
-    transaction_receiver = models.ForeignKey("Account", verbose_name="Получатель транзакции", null=True, on_delete=models.CASCADE, related_name="transaction_received", blank=True)
-    transaction_status = models.CharField(max_length=25, verbose_name="Статус транзакции", choices=STATUSES, default=STATUS_UNSUCCESSFUL, null=False)
+    transaction_executor = models.ForeignKey("Account", verbose_name="Исполнитель транзакции", null=True,
+                                             on_delete=models.CASCADE, related_name="transaction_executed", blank=True)
+    transaction_receiver = models.ForeignKey("Account", verbose_name="Получатель транзакции", null=True,
+                                             on_delete=models.CASCADE, related_name="transaction_received", blank=True)
+    transaction_status = models.CharField(max_length=25, verbose_name="Статус транзакции", choices=STATUSES,
+                                          default=STATUS_UNSUCCESSFUL, null=False)
 
     class Meta:
         verbose_name = "Транзакции"
