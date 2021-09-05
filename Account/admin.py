@@ -47,6 +47,8 @@ class AdminBankAccount(admin.ModelAdmin):
             f"<a href='decline/{obj.pk}' class='button'>Decline</a>"
         )
 
+    account_actions.short_description = "Действия с аккаунтом"
+
     def accept_user(self, request, pk):
         self.model.objects.filter(pk=pk).update(is_active=True)
         return redirect("../")

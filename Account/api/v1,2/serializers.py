@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 from Account.models import Account, Transactions
 
 
-class TransactionsSerializer(serializers.ModelSerializer):
+class TransactionSerializer(serializers.ModelSerializer):
     executor_first_name = serializers.SerializerMethodField(read_only=True)
     receiver_first_name = serializers.SerializerMethodField(read_only=True)
 
@@ -32,8 +32,14 @@ class TransactionsSerializer(serializers.ModelSerializer):
 
 
 class AccountSerializer(serializers.ModelSerializer):
-    transaction_received = TransactionsSerializer(many=True, read_only=True)
-    transaction_executed = TransactionsSerializer(many=True, read_only=True)
+    transactions = serializers.SerializerMethodField()
+
+    def get_transactions(self, obj):
+        current_pk = obj.pk
+        executed_transactions = TransactionSerializer(Transactions.objects.filter(transaction_executor=current_pk), many=True, read_only=True).data
+        received_transactions = TransactionSerializer(Transactions.objects.filter(transaction_receiver=current_pk), many=True, read_only=True).data
+        data = executed_transactions + received_transactions
+        return data
 
     class Meta:
         model = Account
@@ -43,8 +49,7 @@ class AccountSerializer(serializers.ModelSerializer):
             "phone_number",
             "card_number",
             "card_balance",
-            "transaction_received",
-            "transaction_executed"
+            "transactions",
         ]
 
 
@@ -55,3 +60,12 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
             "username",
             "password"
         ]
+
+    def create(self, validated_data):
+        user = User(
+            username=validated_data['username'],
+            password=validated_data['password']
+        )
+        user.set_password(validated_data['password'])
+        user.save()
+        return user
